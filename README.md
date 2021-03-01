@@ -1,3 +1,3 @@
 # shopify-snugkins
 
-Repositiry for maintaining code chanes
+Repositiry for maintaining code changes
