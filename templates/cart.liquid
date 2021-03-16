@@ -1,6 +1,12 @@
-{% comment %}
-  The contents of the cart.liquid template can be found in /sections/cart-template.liquid
-{% endcomment %}
-
-{% section 'cart-template' %}
-
+<div class="cart-template">
+  <div class="container">
+  	{% section 'cart-template' %}  
+    
+    {% unless settings.layout_style == 'layout_style_fullwidth' %}
+    	{% section 'cart-best-sellers' %}
+    {% endunless %}
+  </div> 
+  {% if settings.layout_style == 'layout_style_fullwidth' %}
+    {% section 'cart-best-sellers' %}
+  {% endif %} 
+</div>

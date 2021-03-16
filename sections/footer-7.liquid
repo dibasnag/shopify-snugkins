@@ -1,0 +1,353 @@
+{% render 'style-footer-4' %}
+<footer class="site-footer footer-7" role="contentinfo">
+    {% if section.blocks.size > 0 or section.settings.footer_social_enable or section.settings.footer_newsletter_enable %}
+    <div class="footer-top">
+        <div class="container">
+            <div class="row justify-content-center">
+                {% if section.settings.footer_newsletter_enable %}
+                <div class="col-12 col-md-12 col-xl-6 newsleter-col">
+                    <div class="footer-newsletter">
+                        {% if section.settings.footer_newsletter_title != blank %}
+                        <h3 class="foot-title">
+                            {% render 'multilang' with section.settings.footer_newsletter_title %}
+                        </h3>
+                        {% endif %}
+                        {% render 'homepage-block-newsletter' %}
+                        {% if section.settings.footer_newsletter_des != blank %}
+                            <div class="newsletter-des">
+                                <input type="checkbox" id="check_newsletter">
+                                <label>{{ section.settings.footer_newsletter_des }}</label>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if section.settings.footer_social_enable %}
+                    <div class="footer-social">
+                        {% if section.settings.footer_social_title != blank %}
+                        <h3 class="foot-title">
+                            {% render 'multilang' with section.settings.footer_social_title %}
+                        </h3>
+                        {% endif %}
+                        <div class="groups-block">
+                            {% render 'social-media' %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% if section.blocks.size > 0 %}
+                {% case section.blocks.size %}
+                    {% when 1 %}
+                        {%- assign column_size = 'col-12' -%}
+                    {% when 2 %}
+                        {%- assign column_size = 'col-12 col-md-6' -%}
+                    {% when 3 %}
+                        {%- assign column_size = 'col-12 col-md-4' -%}
+                    {% when 4 %}
+                        {%- assign column_size = 'col-12 col-md-3' -%}
+                {% endcase %}
+                <div class="col-12 col-md-12 col-xl-6 links-col">
+                    <div class="row">
+                        {% for block in section.blocks %}
+                        <div class="col-footer {{ column_size }}">
+                            {% if block.settings.footer_title != blank %}
+                            <h3 class="foot-title dropdow-mb">
+                                {% render 'multilang' with block.settings.footer_title %}
+                            </h3>
+                            {% endif %}
+                            
+                            {%- assign footer_linklist = block.settings.footer_linklist -%}
+                            
+                            {% if linklists[footer_linklist].links.size > 0 %}
+                            <ul>
+                                {% for link in linklists[footer_linklist].links %}
+                                <li>
+                                    <a href="{{ link.url}}" title="{{ link.title }}" class="foot-link">
+                                        {% render 'multilang' with link.title %}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                
+                </div>
+                {% endif %}
+            </div>
+
+   
+        </div>
+    </div>
+    {% endif %}
+
+    {% if section.settings.footer_address_code != blank %}
+    <div class="footer-bottom">
+        <div class="container">
+            {% if section.settings.footer_address_code != blank %}
+            <address>
+                <div>
+                    {{ section.settings.footer_address_code | split: '[lang2]' | first }}
+                </div>
+            </address>
+            {% endif %}     
+        </div>
+    </div>
+    {% endif %}
+</footer>
+
+{% schema %}
+    {
+        "name": "Footer 07",
+        "max_blocks": 3,
+        "blocks": [	  
+            {
+                "type": "footer_link",
+                "name": "Footer Link",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "footer_title",
+                        "label": "Footer Title"
+                    },
+                    {
+                        "type": "link_list",
+                        "id": "footer_linklist",
+                        "label": "Footer Link",
+                        "default": "footer"
+                    }		  
+                ]
+            }            
+        ],
+        "settings": [  
+            {
+                "type": "header",
+                "content": "Footer Background"
+            },            
+            {
+                "type": "radio",
+                "id": "bg_footer_img",
+                "label": "Background image",
+                "options": [
+                    {
+                        "value": "bg-footer",
+                        "label": "Uploaded image"
+                    },
+                    {
+                        "value": "none",
+                        "label": "Solid color (no image)"
+                    }
+                ],
+                "default": "none"
+            },
+            {
+                "type": "color",
+                "id": "bg_footer_color",
+                "label": "Background color",
+                "default": "#fafafa"
+            },
+            {
+                "type": "radio",
+                "id": "bg_footer_position_x",
+                "label": "Horizontal position",
+                "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "center",
+                        "label": "Center"
+                    },
+                    {
+                        "value": "right",
+                        "label": "Right"
+                    }
+                ]
+            },
+            {
+                "type": "radio",
+                "id": "bg_footer_position_y",
+                "label": "Vertical position",
+                "options": [
+                {
+                    "value": "top",
+                    "label": "Top"
+                },
+                {
+                    "value": "center",
+                    "label": "Center"
+                },
+                {
+                    "value": "bottom",
+                    "label": "Bottom"
+                }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "bg_footer_repeat",
+                "label": "Repeat",
+                "options": [
+                {
+                    "value": "repeat",
+                    "label": "Horizontally and vertically"
+                },
+                {
+                    "value": "repeat-x",
+                    "label": "Horizontally only"
+                },
+                {
+                    "value": "repeat-y",
+                    "label": "Vertically only"
+                },
+                {
+                    "value": "no-repeat",
+                    "label": "Don't repeat"
+                }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "bg_footer_attachment",
+                "label": "Attachment",
+                "options": [
+                {
+                    "value": "scroll",
+                    "label": "Scroll"
+                },
+                {
+                    "value": "fixed",
+                    "label": "Fixed"
+                }
+                ]
+            },
+            {
+                "type": "image_picker",
+                "id": "bg-footer-img",
+                "label": "Upload a new image"
+            },      
+            {
+                "type": "header",
+                "content": "Text Color"
+            },
+            {
+                "type": "color",
+                "id": "footer_title_color",
+                "label": "Footer Title",
+                "default": "#232323"
+            },	  
+            {
+                "type": "color",
+                "id": "footer_link_color",
+                "label": "Footer Link",
+                "default": "#707070"
+            },
+            {
+                "type": "color",
+                "id": "footer_link_hover_color",
+                "label": "Footer Link Hover",
+                "default": "#707070"
+            },
+            {
+                "type": "color",
+                "id": "bg_footer_line_color",
+                "label": "Footer Line Color",
+                "default": "#ebebeb"
+            },
+            {
+                "type": "header",
+                "content": "Social"
+            },
+            {
+                "type": "checkbox",
+                "id": "footer_social_enable",
+                "label": "Show social media links?",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "footer_social_title",
+                "label": "Footer Social Title",
+                "default": "Follow us"
+            },  
+            {
+                "type": "color",
+                "id": "social_icon_color",
+                "label": "Social Icons Color",
+                "default": "#232323"
+            },                    
+            {
+                "type": "header",
+                "content": "Newsletter"
+            },
+            {
+                "type": "checkbox",
+                "id": "footer_newsletter_enable",
+                "label": "Show newsletter signup?",
+                "default": false
+            },
+            {
+                "type": "text",
+                "id": "footer_newsletter_title",
+                "label": "Footer Newsletter Title"
+            },
+            {
+                "type": "textarea",
+                "id": "footer_newsletter_des",
+                "label": "Footer Newsletter Descriptions"
+            },
+            {
+                "type": "color",
+                "id": "bg_newsletter_color",
+                "label": "Newsletter Input Background Color",
+                "default": "#fff"
+            },
+            {
+                "type": "color",
+                "id": "newsletter_color",
+                "label": "Newsletter Input Color",
+                "default": "#aaaaaa"
+            },
+            {
+                "type": "color",
+                "id": "newsletter_border_color",
+                "label": "Newsletter Input Border Color",
+                "default": "#d7d7d7"
+            },
+            {
+                "type": "color",
+                "id": "bg_newsletter_button_color",
+                "label": "Background and Border Newsletter Button Color",
+                "default": "#232323"
+            },
+            {
+                "type": "color",
+                "id": "newsletter_button_color",
+                "label": "Newsletter Button Color",
+                "default": "#fff"
+            },               
+            {
+                "type": "header",
+                "content": "Footer Address"
+            },
+            {
+                "type": "color",
+                "id": "bg_footer_bottom_color",
+                "label": "Background Fotter Bottom",
+                "default": "#fff"
+            },
+            {
+                "type": "color",
+                "id": "footer_bottom_color",
+                "label": "Fotter Bottom Color",
+                "default": "#707070"
+            },
+            {
+                "type": "textarea",
+                "id": "footer_address_code",
+                "label": "Footer Address Code"
+            }
+        ]	
+    }
+{% endschema %}

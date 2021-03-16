@@ -1,5 +1,17 @@
-{% comment %}
-  The contents of the blog.liquid template can be found in /sections/blog-template.liquid
-{% endcomment %}
+{% if settings.blog_layout == "default" %} 
 
-{% section 'blog-template' %}
+{% render 'blog-default' %}
+
+{% elsif settings.blog_layout == "full_width" %}
+
+{% render 'blog-full-width' %}
+
+{% elsif settings.blog_layout == "mansory" %}
+
+{% render 'blog-mansory' %}
+
+{% elsif settings.blog_layout == "right_sidebar" %}
+
+{% render 'blog-right-sidebar' %}
+
+{% endif %}

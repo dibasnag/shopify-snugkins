@@ -1,111 +1,105 @@
-{% paginate search.results by 10 %}
+{% assign grid_results = true %}
 
-<div class="page-width">
-  {% if search.performed == false %}
-    <div class="text-center">
-      <h1 class="h2">{{ 'general.search.title' | t }}</h1>
-  {% else %}
-    <div class="text-center">
-      <h1 class="h2">
-        <span class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}:</span>
-        {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
-      </h1>
-  {% endif %}
-      <div class="grid">
-        <div class="grid__item medium-up--six-tenths medium-up--push-two-tenths">
-          {% if search.performed and search.results_count == 0 %}
-            <div class="rte search--no-results-found">
-              <p>{{ 'general.search.no_results' | t }}</p>
-            </div>
-          {% endif %}
-          <form action="{{ routes.search_url }}" method="get" role="search" class="search-form search-page-form">
-            <div class="input-group input-group--nowrap">
-              <div class="input-group__field input-group__field--connected search-form__input-wrapper">
-                <input
-                  type="search"
-                  name="q"
-                  value="{{ search.terms | escape }}"
-                  placeholder="{{ 'general.search.placeholder' | t }}"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-owns="predictive-search-results"
-                  aria-expanded="false"
-                  aria-label="{{ 'general.search.placeholder' | t }}"
-                  aria-haspopup="listbox"
-                  class="search-form__input"
-                  data-search-page-predictive-search-input
-                  data-base-url="{{ routes.search_url }}"
-                />
+<div class="search-page collection-template" data-search-page>
+  <div class="container">
+    {% if search.performed %}
 
-                <input type="hidden" name="options[prefix]" value="last" aria-hidden="true" />
+    {% comment %}
+    Avoid accessing search.results before the opening paginate tag.
+    If you do, the pagination of results will be broken.
+    {% endcomment %}
 
-                <button type="reset" class="search-form__clear-action" aria-label="{{ 'general.search.clear_search_term' | t }}" data-search-page-predictive-search-clear>
-                  {% include 'icon-close' %}
-                </button>
+    {% paginate search.results by 15 %}
 
-                <div class="predictive-search-wrapper" data-predictive-search-mount="default"></div>
-              </div>
+    {% comment %}
+    We don't have any results to show. Feel free to show off featured products
+    or suggested searches here.
+    {% endcomment %}
 
-              <button type="submit" class="search-form__connected-submit" aria-label="{{ 'general.search.submit' | t }}" data-search-page-predictive-search-submit>
-                {% include 'icon-search' %}
-              </button>
-            </div>
-          </form>
+    {% if search.results_count == 0 %}
+    <header class="page-header">
+      <h2>
+        {% render 'multilang' with settings.search_1 %}
+        <strong> &nbsp;"{{ search.terms }}"&nbsp; </strong>
+        {% render 'multilang' with settings.search_2 %}
+      </h2>
+    </header>
+
+    {% else %}
+
+    <header class="page-header">
+      <h2>
+        {% render 'multilang' with settings.search_3 %}
+        <strong> &nbsp;"{{ search.terms }}"&nbsp; </strong>
+        {% render 'multilang' with settings.search_4 %}
+      </h2>
+    </header>
+
+    {% comment %}
+    Each result template, based on the grid_layout variable above
+    {% endcomment %}
+
+    <div class="block-row col-main">
+      {% if grid_results == false %}
+      <div class="product-collection products-list product-search row">
+        {% for product in search.results %}
+        <div class="grid-item col-12{% if settings.product_image_border%} grid-item-border{% endif %}">
+          {% render 'search-result' with product as product %}
         </div>
+        {% endfor %}
       </div>
+
+      {% else %}
+
+      <div class="products-grid product-search row product-collection">
+        {% for product in search.results %}
+        <div class="grid-item col-6 col-md-4 {% unless settings.layout_style == 'layout_style_1170' %} col5 col-lg-3{% endunless %}{% if settings.product_image_border%} grid-item-border{% endif %}">
+          {% if settings.style_product_grid == 'style_product_grid_2' %}
+            {% render 'product-grid-item-style-2' with product as product %}
+          {% elsif settings.style_product_grid == 'style_product_grid_3' %}
+            {% render 'product-grid-item-style-3' with product as product %}
+          {% else %}
+            {% render 'product-grid-item' with product as product %}
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if paginate.pages > 1 %}
+    <div class="padding">
+      {% render 'pagination-page' paginate: paginate %}
+    </div>
+    {% endif %}
+    {% endpaginate %}
+
+    {% else %}
+
+    {% comment %}
+    If search.performed is false, someone either accessed the page without
+    the q parameter, or it was blank.
+    Be sure to show a search form here, along with anything else you want to showcase.
+    {% endcomment %}
+
+    <header class="page-header">
+      <h2 style="text-align:center" {% if settings.enable_multilang %}data-translate="general.search.title"{%endif%}>{{ 'general.search.title' | t }}</h2>
+      <div class="header-search__form">
+          <form action="/search" method="get" class="search-bar" role="search">
+              <input type="hidden" name="type" value="product">
+
+              <input type="search" name="q"
+                  {% if settings.enable_multilang %} data-translate="general.search.placeholder" translate-item="placeholder"{% endif %}
+                  placeholder="{{ 'general.search.placeholder' | t }}"
+                  class="input-group-field" aria-label="Search Site" autocomplete="off">
+
+              <button type="submit" class="btn icon-search">
+                  {% render 'icon-search' %}
+              </button>
+          </form>
+      </div>
+    </header>
+    {% endif %}
   </div>
 </div>
-
-
-{% if search.performed %}
-  {% if search.results_count > 0 %}
-    <hr aria-hidden="true" />
-  {% endif %}
-
-  <h2 class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}</h2>
-
-  <ul class="page-width list-view-items">
-    {% for item in search.results %}
-      <li class="list-view-item">
-        {% if item.object_type == 'product' %}
-          {% include 'product-card-list', product: item %}
-        {% else %}
-          <div class="product-card product-card--list">
-            <a href="{{ item.url }}" class="full-width-link">
-              <span class="visually-hidden">{{ item.title }}</span>
-            </a>
-            <div class="list-view-item__link">
-              <div class="list-view-item__image-column">
-                <div class="list-view-item__image-wrapper product-card__image-wrapper">
-                  {% unless item.image == null %}
-                    <img class="list-view-item__image" src="{{ item.image.src | img_url: '600x600' }}" alt="{{ item.image.alt | escape }}">
-                  {% endunless %}
-                </div>
-              </div>
-
-              <div class="list-view-item__title-column">
-                <div class="list-view-item__title" aria-hidden="true">
-                  <span class="product-card__title">{{ item.title }}</span>
-                </div>
-                <div>
-                  {% if item.published_at %}{{ item.published_at | date: format: "date" }} &#8212; {% endif %}
-                  {{ item.content | strip_html | truncate: 200 }}
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-
-  {%- if paginate.pages > 1 -%}
-    {% include 'pagination', paginate: paginate %}
-  {%- endif -%}
-{% endif %}
-
-{% if search.results_count < 2  %}
-  <div class="search--less-than-2-results"></div>
-{% endif %}
-
-{% endpaginate %}

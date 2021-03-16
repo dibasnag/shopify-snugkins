@@ -1,0 +1,258 @@
+<div class="home-about-us {% if section.settings.style_title == 'style_2' %}style_2{% endif %} {% if section.settings.title_sub != blank %} sub_title_padding{% endif %}
+" id="home-about-{{ section.id }}">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-10 offset-lg-1">
+      	{% if section.settings.title != blank %}
+            <h4 class="title">
+              {% render 'multilang' with section.settings.title %}
+            </h4>
+        {% endif %}
+
+        {% if section.settings.title_sub != blank %}
+            <h3 class="sub-title">
+              {% render 'multilang' with section.settings.title_sub %}
+            </h3>
+        {% endif %}
+        
+        {% if section.settings.des != blank %}
+            <div class="des">
+              {{ section.settings.des }}
+            </div>
+        {% endif %}
+
+        {% if section.settings.button_text != blank %}
+            <a class="btn btn-about-us" href="{{ section.settings.button_text_link }}">{{ section.settings.button_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+    {% if section.blocks.size > 0 %}
+    <div class="list-item">
+        {% for block in section.blocks %}
+            {% if block.settings.image != blank or block.settings.content != blank %}
+            <div class="item" id="item-{{block.id}}">
+                {% if block.settings.image != blank %}
+                <div class="image">
+                    <img data-srcset="{{ block.settings.image | img_url: '200x' }}" class="lazyload" alt="{{ block.settings.image.alt | default: shop.name }}" />
+                </div>
+                {% endif %}
+                {% if block.settings.content != blank %}
+                <div class="content">
+                    {{ block.settings.content }}
+                </div>
+                {% endif %}
+                <style>
+                    #item-{{block.id}} .content p, #item-{{block.id}} .content a {
+                        color: {{ block.settings.color_content }};
+                    }
+                </style>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  {% assign margin_bottom =  section.settings.margin_bottom %}  
+
+    #home-about-{{ section.id }} {
+        background-color: {{ section.settings.bg_color }};
+    }
+  
+    #home-about-{{ section.id }} .title {
+        color: {{ section.settings.color_title }};
+        font-size: {{ section.settings.font_size_title }};
+        {% if section.settings.title_sub == blank %}
+            margin-bottom: {{ section.settings.font_size_title }};
+        {% else %}
+            margin-bottom: 0;
+        {% endif %}
+    }
+
+    #home-about-{{ section.id }} .sub-title {
+        color: {{ section.settings.color_title_sub }};
+        font-size: {{ section.settings.font_size_title_sub }};
+    }
+    
+    #home-about-{{ section.id }} .des {
+        color: {{ section.settings.color_des }};
+        font-size: {{ section.settings.font_size_des }};
+    }
+
+    #home-about-{{ section.id }} .btn-about-us {
+        color: {{ section.settings.color_button }};
+        border-color: {{ section.settings.color_border_button }};
+        background-color: {{ section.settings.bg_color_button }};
+    }
+    
+    @media (min-width: 1200px) {
+        #home-about-{{ section.id }} {
+        margin-bottom: {{ margin_bottom }}px;
+        }
+    }	
+
+    {% unless section.settings.display_border_top %}
+    #home-about-{{ section.id }} {
+        border-top: none;
+    }
+    {% endunless %}
+</style>
+
+
+
+{% schema %}
+    {
+        "name": "About Us",
+        "class": "home-about-us-sections",
+        "settings": [
+            {
+                "type": "checkbox",
+                "id": "display_border_top",
+                "label": "Display Border Top?",
+                "default": true
+            },
+            {
+                "type" : "color",
+                "id" : "bg_color",
+                "label" : "Background Color",
+                "default" : "transparent"
+            },
+            {
+                "type": "select",
+                "id": "style_title",
+                "label": "Title Style:",
+                "options": [
+                    {
+                        "value": "style_1",
+                        "label": "Style 1"
+                    },
+                    {
+                        "value": "style_2",
+                        "label": "Style 2"
+                    }
+                ],
+                    "default": "style_1"
+            },
+            {
+                "type": "textarea",
+                "id": "title",
+                "label": "Title",
+                "default": "About The Shop"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_title",
+                "label" : "Title Font Size",
+                "default" : "12px"
+            },
+            {
+                "type" : "color",
+                "id" : "color_title",
+                "label" : "Title Color",
+                "default" : "#232323"
+            },
+            {
+                "type": "textarea",
+                "id": "title_sub",
+                "label": "Sub Title"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_title_sub",
+                "label" : "Sub Title Font Size",
+                "default" : "12px"
+            },
+            {
+                "type" : "color",
+                "id" : "color_title_sub",
+                "label" : "Sub Title Color"
+            },
+            {
+                "type": "textarea",
+                "id": "des",
+                "label": "Descriptions"
+            },
+            {
+                "type" : "color",
+                "id" : "color_des",
+                "label" : "Description Color",
+                "default" : "#787878"
+            },
+            {
+                "type" : "text",
+                "id" : "font_size_des",
+                "label" : "Des Font Size",
+                "default" : "14px"
+            },
+            {
+                "type" : "text",
+                "id" : "button_text",
+                "label" : "Button Text"
+            },
+            {
+                "type" : "url",
+                "id" : "button_text_link",
+                "label" : "Button Link"
+            },
+            {
+                "type" : "color",
+                "id" : "color_button",
+                "label" : "Color Button",
+                "default" : "#202020"
+            },
+            {
+                "type" : "color",
+                "id" : "color_border_button",
+                "label" : "Border Color Button",
+                "default" : "#ffffff"
+            },
+            {
+                "type" : "color",
+                "id" : "bg_color_button",
+                "label" : "Background Color Button",
+                "default" : "#ffffff"
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "label": "Margin Bottom",
+                "min": 0,
+                "max": 100,
+                "step": 1,
+                "default": 30
+            }
+        ],
+        "blocks": [
+            {
+                "type": "block",
+                "name": "Block",
+                "settings":[
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Icon"
+                    },
+                    {
+                        "type": "richtext",
+                        "id":"content",
+                        "label": "Content"
+                    },
+                    {
+                        "type" : "color",
+                        "id" : "color_content",
+                        "label" : "Color Content",
+                        "default" : "#000000"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "About Us",
+                "category": "text"
+            }
+        ]
+    }
+{% endschema %}
