@@ -1,44 +1,51 @@
-{% comment %}
-    Renders a pagination bar
-
-    Accepts:
-    - paginate: {Object} Paginate Liquid object (required)
-
-    Usage:
-    {% include 'pagination', paginate: paginate %}
-{% endcomment %}
-<ul class="list--inline pagination">
-  {% unless paginate.previous.is_link %}
-    <li aria-hidden="true">
-      <button class="btn btn--tertiary btn--narrow" disabled>
-        {% include 'icon-arrow-left' %}
-        <span class="icon__fallback-text">{{ 'general.pagination.previous' | t }}</span>
-      </button>
+<ul class="pagination-center text-center">
+  {% if paginate.previous %}
+    <li class="text">
+      <a href="{{ paginate.previous.url }}" title="{{ 'collections.toolbar.previous' | t }}" {% if settings.enable_multilang %}data-translate="collections.toolbar.previous" translate-item="title"{% endif %}>
+        <i class="fa fa-angle-left" aria-hidden="true"></i>
+        <span {% if settings.enable_multilang %}data-translate="collections.toolbar.previous"{% endif %}>
+          {{ 'collections.toolbar.previous' | t }}
+        </span>
+      </a>
     </li>
     {% else %}
-    <li>
-      <a href="{{ paginate.previous.url }}" class="btn btn--tertiary btn--narrow">
-        {% include 'icon-arrow-left' %}
-        <span class="icon__fallback-text">{{ 'general.pagination.previous' | t }}</span>
+    <li class="disabled">
+      <i class="fa fa-angle-left" aria-hidden="true"></i>
+      <span {% if settings.enable_multilang %}data-translate="collections.toolbar.previous"{% endif %}>
+        {{ 'collections.toolbar.previous' | t }}
+      </span>
+    </li>
+  {% endif %}
+
+  {% for part in paginate.parts %}
+    {% if part.is_link %}
+      <li>
+        <a href="{{ part.url }}" title="">{{ part.title }}</a>
+      </li>
+    {% else %}
+      {% if part.title == paginate.current_page %}
+        <li class="active"><span>{{ part.title }}</span></li>
+      {% else %}
+        <li><span>{{ part.title }}</span></li>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if paginate.next %}
+    <li class="text">
+      <a href="{{ paginate.next.url }}" title="{{ 'collections.toolbar.next' | t }}" {% if settings.enable_multilang %}data-translate="collections.toolbar.next" translate-item="title"{% endif %}>
+        <span {% if settings.enable_multilang %}data-translate="collections.toolbar.next"{% endif %}>
+        {{ 'collections.toolbar.next' | t }}
+        </span>
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
       </a>
     </li>
-  {% endunless %}
-  <li class="pagination__text">
-    {{ 'general.pagination.current_page' | t: current: paginate.current_page, total: paginate.pages }}
-  </li>
-  {% unless paginate.next.is_link %}
-    <li aria-hidden="true">
-      <button class="btn btn--tertiary btn--narrow" disabled>
-        {% include 'icon-arrow-right' %}
-        <span class="icon__fallback-text">{{ 'general.pagination.next' | t }}</span>
-      </button>
+    {% else %}
+    <li class="disabled">
+      <span {% if settings.enable_multilang %}data-translate="collections.toolbar.next"{% endif %}>
+        {{ 'collections.toolbar.next' | t }}
+      </span>
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
     </li>
-  {% else %}
-    <li>
-      <a href="{{ paginate.next.url }}" class="btn btn--tertiary btn--narrow">
-        {% include 'icon-arrow-right' %}
-        <span class="icon__fallback-text">{{ 'general.pagination.next' | t }}</span>
-      </a>
-    </li>
-  {% endunless %}
+  {% endif %}
 </ul>

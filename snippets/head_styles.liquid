@@ -1,0 +1,34 @@
+{{ 'vendor.min.css' | asset_url | stylesheet_tag }}
+<!-- {{ 'theme-styles.css' | asset_url | stylesheet_tag }}
+{{ 'theme-styles-responsive.css' | asset_url | stylesheet_tag }} -->
+{{ 'theme.min.css' | asset_url | stylesheet_tag }}
+{{ 'theme-settings.css' | asset_url | stylesheet_tag }}
+
+
+{% if settings.layout_style == 'layout_style_1170' %}
+	{{ 'layout_style_1170.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if settings.header_layout == '05' %}
+	{{ 'header-05.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if settings.header_layout == '06' %}
+	{{ 'header-06.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if settings.footer_layout == '06' %}
+	{{ 'footer-06.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if settings.footer_layout == '07' %}
+	{{ 'footer-07.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if settings.product_layout == 'skin_1' or template.suffix == 'skin-1' %}
+	{{ 'product-skin.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if settings.layout_style == 'layout_style_fullwidth' %}
+	{{ 'layout_style_fullwidth.css' | asset_url | stylesheet_tag }}
+{% endif %}
